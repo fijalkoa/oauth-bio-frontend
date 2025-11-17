@@ -1,0 +1,174 @@
+.signup-background {
+    background: rgba(185, 225, 129, 0.47);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Crimson Text', serif;
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.tab {
+    flex: 1;
+    padding: 0.5rem 0;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: none;
+    font-weight: 600;
+    cursor: default;
+    /* user cannot click */
+    color: #888;
+}
+
+.tab.active {
+    border-bottom: 3px solid #89BF3F;
+    color: #000;
+}
+
+.logo-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-icon {
+    width: 35px;
+    height: auto;
+}
+
+.logo-text {
+    font-weight: 600;
+    font-size: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    /* vertical gap, horizontal gap */
+    /* margin-bottom: 1.5rem; */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* left-align labels */
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 1.15rem;
+    text-align: left;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid grey;
+    font-size: 0.95rem;
+}
+
+.signup-container {
+    background: #fff;
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+    width: 500px;
+    min-height: 500px;
+    text-align: center;
+}
+
+.signup-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* Form styles */
+.signup-form .form-control {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid grey;
+}
+
+.password-info {
+    font-size: 1.15rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn-next,
+.btn-submit,
+.btn-back {
+    padding: 1rem;
+    min-width: 150px;
+    border-radius: 25px;
+    border: none;
+    font-size: 19px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-next {
+    background-color: #89BF3F;
+    color: #000;
+    flex: 1;
+}
+
+.btn-next:hover {
+    background-color: #68a334;
+}
+
+.btn-back {
+    background-color: #e0e0e0;
+    color: #000;
+    flex: 1;
+}
+
+.btn-back:hover {
+    background-color: #cfcfcf;
+}
+
+.btn-submit {
+    background-color: #89BF3F;
+    color: #000;
+    flex: 1;
+}
+
+.btn-submit:hover {
+    background-color: #68a334;
+}
+
+
+.small {
+    color: #2a62d4;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.small:hover {
+    color: #1a47a1;
+}

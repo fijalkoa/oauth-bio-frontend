@@ -1,0 +1,139 @@
+/* Full green background */
+.home-bg {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #d7f8c7, #c4efb5, #e2ffd3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Text', serif;
+    position: relative;
+}
+
+/* Logo top-left */
+.logo-container {
+    position: absolute;
+    top: 30px;
+    left: 35px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 36px;
+}
+
+.logo-text {
+    font-size: 26px;
+    color: #145214;
+    font-weight: bold;
+}
+
+/* Main white container */
+.home-card {
+    width: 1200px;
+    height: 650px;
+    background: white;
+    border-radius: 35px;
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.18);
+    display: flex;
+    padding: 50px 70px;
+}
+
+/* Left side — centered vertically AND horizontally */
+.home-left {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* <-- VERTICAL CENTER */
+    align-items: center;       /* <-- HORIZONTAL CENTER */
+    text-align: center;
+}
+
+/* User photo */
+.home-user-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+/* Hi <name> */
+.home-hello {
+    font-size: 38px;
+    margin-bottom: 30px;
+    color: #0c4a0c;
+}
+
+/* Welcome text */
+.home-welcome {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.logout-btn {
+    margin-top: 4px;
+    font-size: 18px;
+    color: #0066ff;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+/* Divider line between columns */
+.home-divider {
+    width: 2px;
+    background: #ddebdc;
+    margin: 0 50px;
+}
+
+/* Right side */
+.home-right {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* optional: centers vertically */
+}
+
+.home-title {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #0e5f0e;
+    font-weight: 600;
+}
+
+/* List of buttons */
+.home-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Green buttons with arrow on right */
+.green-btn {
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    background: linear-gradient(135deg, #baf7b7, #a3e89f, #c9ffc9);
+    transition: 0.2s;
+    display: flex;
+    justify-content: space-between; /* text left, arrow right */
+    align-items: center;
+}
+
+.arrow {
+    font-size: 22px;
+    opacity: 0.5;
+    transition: 0.2s;
+}
+
+.green-btn:hover .arrow {
+    opacity: 1;
+    transform: translateX(3px) translateY(-2px);
+}

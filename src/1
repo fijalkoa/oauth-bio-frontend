@@ -1,0 +1,193 @@
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import * as faceapi from "face-api.js";
+import "./FaceModal.css";
+
+export default function FaceModal({
+  title = "Verify Your Identity",
+  subtitle = "Position your face in the circle",
+  onClose,
+  altAction,
+  altActionLabel = "Authenticate with password",
+  wsUrl = "ws://localhost:8080/ws/face",
+}) {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const wsRef = useRef(null);
+
+  const [stream, setStream] = useState(null);
+  const [faceDetected, setFaceDetected] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+
+  const stopCamera = useCallback(() => {
+    if (stream) stream.getTracks().forEach(track => track.stop());
+  }, [stream]);
+
+  // 1️⃣ Inicjalizacja WebSocket
+  useEffect(() => {
+    if (wsRef.current) return; // tylko jedno połączenie
+
+    wsRef.current = new WebSocket(wsUrl);
+
+    wsRef.current.onopen = () => console.log("Connected to WS server");
+    wsRef.current.onmessage = (event) => console.log("Server says:", event.data);
+    wsRef.current.onclose = () => console.log("WS connection closed");
+    wsRef.current.onerror = (err) => console.error("WS error:", err);
+
+    return () => wsRef.current?.close();
+  }, [wsUrl]);
+
+  // 2️⃣ Wczytywanie modeli face-api
+  useEffect(() => {
+    const loadModels = async () => {
+      const MODEL_URL = "/models";
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      setModelsLoaded(true);
+      console.log("Face-api models loaded");
+    };
+    loadModels();
+  }, []);
+
+  // 3️⃣ Start kamery i wykrywanie twarzy
+  useEffect(() => {
+    if (!modelsLoaded) return;
+
+    let mounted = true;
+
+    const startCamera = async () => {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+        });
+        if (!mounted) return;
+
+        setStream(mediaStream);
+        const video = videoRef.current;
+        if (video) {
+          video.srcObject = mediaStream;
+          video.onloadedmetadata = async () => {
+            await video.play();
+            setVideoReady(true); // wideo gotowe do snapshot
+            startFaceDetection();
+          };
+        }
+      } catch (err) {
+        console.error("Camera error:", err);
+      }
+    };
+
+    const startFaceDetection = () => {
+      const detect = async () => {
+        if (!videoReady || !videoRef.current) {
+          requestAnimationFrame(detect);
+          return;
+        }
+
+        try {
+          const detections = await faceapi.detectAllFaces(
+            videoRef.current,
+            new faceapi.TinyFaceDetectorOptions()
+          );
+
+          if (detections.length > 0 && !faceDetected) {
+            setFaceDetected(true);
+            capturePhoto();
+          }
+        } catch (err) {
+          console.error("Face detection error:", err);
+        }
+
+        requestAnimationFrame(detect);
+      };
+
+      detect();
+    };
+
+    startCamera();
+
+    return () => {
+      mounted = false;
+      stopCamera();
+    };
+  }, [modelsLoaded, videoReady, stopCamera, faceDetected]);
+
+  // 4️⃣ Snapshot + WS + lokalny zapis
+  const capturePhoto = () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!videoReady || !video || !canvas || !video.videoWidth || !video.videoHeight) {
+      console.log("Video or canvas not ready");
+      return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+
+      // wysyłanie przez WS
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const arrayBuffer = reader.result;
+          wsRef.current.send(arrayBuffer);
+          console.log("Image sent via WebSocket");
+        };
+        reader.readAsArrayBuffer(blob);
+      }
+
+      // zapis lokalny
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `face_${Date.now()}.png`;
+      link.click();
+      console.log("Image saved locally");
+    }, "image/png");
+
+    console.log("Captured & processed image");
+  };
+
+  return (
+    <div className="face-modal-overlay">
+      <div className="face-login-container">
+        {onClose && (
+          <button
+            className="close-btn"
+            onClick={() => {
+              stopCamera();
+              onClose();
+            }}
+          >
+            ×
+          </button>
+        )}
+
+        <h1 className="title">{title}</h1>
+        <p className="subtitle">
+          {!modelsLoaded
+            ? "Loading face detection models..."
+            : faceDetected
+              ? "Image captured and sent"
+              : subtitle}
+        </p>
+
+        <div className="face-circle" style={{ cursor: "default" }}>
+          <img src="/images/user.png" alt="User" className="face-image-small" />
+        </div>
+
+        <video ref={videoRef} style={{ display: "none" }} />
+        <canvas ref={canvasRef} style={{ display: "none" }} />
+
+        {altAction && (
+          <button className="alt-auth" onClick={altAction}>
+            {altActionLabel}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
