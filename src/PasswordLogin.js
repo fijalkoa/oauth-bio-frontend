@@ -6,6 +6,7 @@ import FaceModal from "./components/faceModal/FaceModal";
 
 export default function PasswordLogin() {
     const [showFaceModal, setShowFaceModal] = useState(false);
+    const [email, setEmail] = useState("");
 
     return (
         <div className="password-login-container">
@@ -28,6 +29,8 @@ export default function PasswordLogin() {
                         name="email"
                         className="form-control"
                         placeholder="Email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
 
@@ -60,7 +63,13 @@ export default function PasswordLogin() {
                         <button
                             type="button"
                             className="btn btn-face"
-                            onClick={() => setShowFaceModal(true)}
+                            onClick={() => {
+                                if (!email.trim()) {
+                                    alert("Please enter your email address first");
+                                    return;
+                                }
+                                setShowFaceModal(true);
+                            }}
                         >
                             Use face option ↗
                         </button>
@@ -76,6 +85,7 @@ export default function PasswordLogin() {
                     onClose={() => setShowFaceModal(false)}
                     altAction={() => setShowFaceModal(false)}
                     altActionLabel="Use password instead"
+                    userId={email}
                 />
             )}
         </div>

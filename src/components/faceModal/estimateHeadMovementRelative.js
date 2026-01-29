@@ -46,8 +46,8 @@ export function estimateHeadMovementRelative(detection, neutral) {
     "ChinY=", ratioChin.toFixed(3)
   );
 
-  if (ratioX > threshold) return "RIGHT";
-  if (ratioX < -threshold) return "LEFT";
+  if (ratioX > threshold) return "LEFT";
+  if (ratioX < -threshold) return "RIGHT";
 
   const vertical = (ratioY + ratioChin) / 2;
   if (vertical > threshold) return "DOWN";

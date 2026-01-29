@@ -9,14 +9,15 @@ export function useFaceRegistration(
   setSubtitle,
   setIsCapturing,
   stopped,
-  modelsLoaded
+  modelsLoaded,
+  wsReady
 ) {
   const neutralRef = useRef(null); // <- wywołany zawsze
 
   useEffect(() => {
     if (!modelsLoaded) return; // <- warunek wewnątrz useEffect
     if (!videoRef.current || !wsRef.current) return;
-    if (!registrationStep || stopped) return;
+    if (!registrationStep || stopped || !wsReady) return;
 
     const captureAndSendFace = (box) => {
       const canvas = document.createElement("canvas");
@@ -97,5 +98,5 @@ export function useFaceRegistration(
     }, 200);
 
     return () => clearInterval(intervalId);
-  }, [videoRef, wsRef, registrationStep, setIsCapturing, setSubtitle, stopped, modelsLoaded]);
+  }, [videoRef, wsRef, registrationStep, setIsCapturing, setSubtitle, stopped, modelsLoaded, wsReady]);
 }

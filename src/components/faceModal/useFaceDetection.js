@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import * as faceapi from "face-api.js";
 
-export function useFaceDetection(videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped) {
+export function useFaceDetection(videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped, wsReady) {
   useEffect(() => {
-    if (stopped) return;
+    if (stopped || !wsReady) return;
 
     let intervalId;
 
@@ -66,5 +66,5 @@ export function useFaceDetection(videoRef, wsRef, isCapturing, setIsCapturing, s
     };
 
     return () => clearInterval(intervalId);
-  }, [videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped]);
+  }, [videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped, wsReady]);
 }

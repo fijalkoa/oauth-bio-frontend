@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, use } from "react";
 import * as faceapi from "face-api.js";
 import { useNavigate } from "react-router-dom";
 import "./FaceModal.css";
@@ -13,7 +13,12 @@ export default function FaceModal({
   altAction,
   altActionLabel = "Authenticate with password",
   mode = "login",
+  userId = "unknown",
+  registrationData = null,
 }) {
+  console.log("[FaceModal] Component loaded with userId:", userId);
+  console.log("[FaceModal] Registration data:", registrationData);
+  
   const imageRef = useRef(null); // now we use an image instead of video
 
   const videoRef = useRef(null);
@@ -23,6 +28,7 @@ export default function FaceModal({
   const [registrationStep, setRegistrationStep] = useState(null);
   const [stopped, setStopped] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [wsReady, setWsReady] = useState(false);
 
   const navigate = useNavigate();
 
@@ -67,14 +73,24 @@ export default function FaceModal({
     wsRef.current.binaryType = "arraybuffer";
 
     wsRef.current.onopen = () => {
-      console.log("WebSocket connected");
+      console.log("WebSocket connected, sending meta with userId:", userId);
+      setWsReady(true);
 
       // Send mode info immediately
-      wsRef.current.send(JSON.stringify({
+      const metaMessage = {
         type: "meta",
         mode: mode,
-        step: "0"
-      }));
+        step: "0",
+        userId: userId
+      };
+
+      // If registering, include user data
+      if (mode === "register" && registrationData) {
+        metaMessage.registrationData = registrationData;
+        console.log("Sending registration data:", registrationData);
+      }
+
+      wsRef.current.send(JSON.stringify(metaMessage));
     };
 
     wsRef.current.onmessage = (msg) => {
@@ -85,6 +101,11 @@ export default function FaceModal({
         if (data === "false") {
           setIsCapturing(false);
           setSubtitle("Face not recognized, please try again");
+          // Automatically prepare for retry
+          setTimeout(() => {
+            setIsCapturing(true);
+            setSubtitle("Position your face in the circle");
+          }, 2000);
         } else if (data === "true") {
           handleClose();
           setSubtitle("Face accepted!");
@@ -102,7 +123,8 @@ export default function FaceModal({
           wsRef.current.send(JSON.stringify({
             type: "meta",
             mode: "register",
-            step: move
+            step: move,
+            userId: userId
           }));
         } else if (data === "ENROLLMENT_OK") {
           handleClose();
@@ -118,8 +140,8 @@ export default function FaceModal({
   }, [wsUrl, mode, navigate, handleClose]);
 
   // Hooks for face detection and registration
-  useFaceDetection(videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped);
-  useFaceRegistration(videoRef, wsRef, registrationStep, setSubtitle, setIsCapturing, stopped, modelsLoaded);
+  useFaceDetection(videoRef, wsRef, isCapturing, setIsCapturing, setSubtitle, stopped, wsReady);
+  useFaceRegistration(videoRef, wsRef, registrationStep, setSubtitle, setIsCapturing, stopped, modelsLoaded, wsReady);
 
   return (
     <div className="face-modal-overlay">
@@ -127,16 +149,8 @@ export default function FaceModal({
         {onClose && <button className="close-btn" onClick={handleClose}>×</button>}
         <h1 className="title">{title}</h1>
         <p className="subtitle">{subtitle}</p>
-        {/* <VideoFeed ref={videoRef} /> */}
-        {/* Display a static image instead of video */}
-        <div className="face-circle">
-          <img
-            ref={imageRef}
-            src="/images/user.png"
-            alt="User placeholder"
-            className="face-image-small"
-          />
-        </div>
+        <VideoFeed ref={videoRef} />
+        <div className="face-circle"></div>
         {altAction && <button className="alt-auth" onClick={altAction}>{altActionLabel}</button>}
       </div>
     </div>

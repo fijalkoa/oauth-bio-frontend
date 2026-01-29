@@ -128,6 +128,8 @@ export default function Signup() {
             subtitle="Position your face in the circle"
             altActionLabel="Skip face setup for now"
             mode="register"
+            userId={formData.email}
+            registrationData={formData}
           />
         )}
 
