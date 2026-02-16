@@ -1,0 +1,275 @@
+/* OAuth2 Consent Screen Styling */
+
+.oauth-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.consent-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  padding: 32px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.consent-header {
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+}
+
+.consent-app-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.consent-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.consent-app-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.consent-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+.consent-scopes {
+  margin: 24px 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.scope-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #f5f5f5;
+  transition: background-color 0.2s;
+}
+
+.scope-item:hover {
+  background: #efefef;
+}
+
+.scope-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.scope-content {
+  flex: 1;
+}
+
+.scope-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.scope-description {
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+.scope-check {
+  color: #4caf50;
+  font-size: 18px;
+}
+
+.consent-info {
+  margin: 20px 0;
+  padding: 12px;
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  border-radius: 4px;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #1565c0;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.info-text:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-text {
+  font-size: 11px;
+  color: #0d47a1;
+}
+
+.consent-agreement {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 12px;
+  background: #fff9e6;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.consent-agreement input[type="checkbox"] {
+  margin-top: 4px;
+  cursor: pointer;
+  accent-color: #4caf50;
+  width: 18px;
+  height: 18px;
+}
+
+.agreement-label {
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0 16px 0;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-deny {
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-deny:hover:not(:disabled) {
+  background: #e0e0e0;
+  border-color: #ccc;
+}
+
+.btn-approve {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background: #45a049;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.consent-footer {
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Scrollbar styling */
+.consent-scopes::-webkit-scrollbar {
+  width: 6px;
+}
+
+.consent-scopes::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.consent-scopes::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.consent-scopes::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .consent-container {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .consent-app-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .consent-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .consent-app-name {
+    font-size: 18px;
+  }
+
+  .consent-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

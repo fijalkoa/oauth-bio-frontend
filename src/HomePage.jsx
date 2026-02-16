@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
+import { getUserInfo, clearTokens } from "./services/authService";
 
-export default function HomePage({ name = "User", photo = "/images/user.png" }) {
+export default function HomePage() {
+    const [userInfo, setUserInfo] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const info = getUserInfo();
+        if (info) {
+            setUserInfo(info);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        clearTokens();
+        navigate("/login");
+    };
     return (
         <div className="home-bg">
 
@@ -15,8 +31,8 @@ export default function HomePage({ name = "User", photo = "/images/user.png" }) 
 
                 {/* LEFT SIDE */}
                 <div className="home-left">
-                    <img src={photo} alt="User" className="home-user-photo" />
-                    <h1 className="home-hello">Hi {name}</h1>
+                    <img src="/images/user.png" alt="User" className="home-user-photo" />
+                    <h1 className="home-hello">Hi {userInfo?.name || userInfo?.email || "User"}</h1>
 
                     <p className="home-welcome">
                         Welcome to <strong>BioSSO</strong>.<br />
@@ -24,7 +40,7 @@ export default function HomePage({ name = "User", photo = "/images/user.png" }) 
                         and account preferences in one place.
                     </p>
 
-                    <a href="/login" className="logout-btn">Already leaving? Logout</a>
+                    <button onClick={handleLogout} className="logout-btn">Logout</button>
 
                 </div>
 
